@@ -1,7 +1,4 @@
-// Campus Cafeteria Ordering System - script.js
-
-// ---------- 1. DATA (arrays of objects) ----------
-const TAX_RATE = 0.05; // 5% tax
+const TAX_RATE = 0.05; 
 
 const menu = [
   { id: 1, name: "Veg Sandwich",      price: 40,  category: "Breakfast", image: "images/veg_sandwich.jpeg",      inStock: true,  veg: true  },
@@ -16,13 +13,10 @@ const menu = [
 const categories = ["All", "Breakfast", "Lunch", "Snacks", "Beverages"];
 
 const timeSlots = ["10:30 – 10:45 AM", "12:30 – 12:45 PM", "2:00 – 2:15 PM", "3:30 – 3:45 PM"];
-
-// ---------- 2. STATE (values that change while using the app) ----------
-let cart = [];              // each item: { id: 1, qty: 2 }
+let cart = [];              
 let activeCategory = "All";
 let selectedSlot = null;
 
-// ---------- 3. SMALL HELPERS ----------
 function money(amount) {
   return "₹" + amount.toFixed(2).replace(".00", "");
 }
@@ -31,7 +25,6 @@ function findFood(id) {
   return menu.find(function (item) { return item.id === id; });
 }
 
-// Show one page and hide the others
 function showPage(pageId) {
   ["menuPage", "pickupPage", "confirmPage"].forEach(function (id) {
     document.getElementById(id).classList.add("hidden");
@@ -40,7 +33,6 @@ function showPage(pageId) {
   window.scrollTo(0, 0);
 }
 
-// ---------- 4. MENU: category buttons + food cards ----------
 function renderFilters() {
   let html = "";
   categories.forEach(function (cat) {
@@ -68,7 +60,6 @@ function renderMenu() {
       ? `<button class="btn small" onclick="addToCart(${food.id})">Add to Cart</button>`
       : '<button class="btn small" disabled>Unavailable</button>';
 
-    // Veg / Non-Veg badge
     const vegBadge = food.veg
       ? '<span class="veg-badge veg"> Veg</span>'
       : '<span class="veg-badge nonveg"> Non-Veg</span>';
@@ -86,11 +77,10 @@ function renderMenu() {
   document.getElementById("menuGrid").innerHTML = html;
 }
 
-// ---------- 5. CART ----------
 function addToCart(id) {
   const existing = cart.find(function (item) { return item.id === id; });
   if (existing) {
-    existing.qty++;          // already in cart -> just increase quantity
+    existing.qty++;
   } else {
     cart.push({ id: id, qty: 1 });
   }
@@ -100,7 +90,7 @@ function addToCart(id) {
 function changeQty(id, change) {
   const item = cart.find(function (i) { return i.id === id; });
   item.qty += change;
-  if (item.qty <= 0) removeItem(id);   // quantity 0 -> remove item
+  if (item.qty <= 0) removeItem(id);
   else renderCart();
 }
 
@@ -114,7 +104,6 @@ function clearCart() {
   renderCart();
 }
 
-// Calculate subtotal, tax and total
 function calculateTotals() {
   let subtotal = 0;
   cart.forEach(function (item) {
@@ -163,7 +152,6 @@ function renderCart() {
   document.getElementById("cartTitleCount").textContent = count;
 }
 
-// ---------- 6. PICKUP TIME ----------
 function goToPickup() {
   if (cart.length === 0) {
     document.getElementById("cartMsg").textContent = "Your cart is empty. Add at least one item first.";
@@ -193,7 +181,6 @@ function selectSlot(slot) {
   renderSlots();
 }
 
-// Builds the "order summary" lines (used on pickup + confirmation pages)
 function itemLinesHTML() {
   let html = "";
   cart.forEach(function (item) {
@@ -213,7 +200,6 @@ function summaryHTML() {
   return html;
 }
 
-// ---------- 7. CONFIRM ORDER (with validation) ----------
 function confirmOrder() {
   if (selectedSlot === null) {
     document.getElementById("pickupError").textContent = "Please select a pickup time before confirming.";
@@ -236,7 +222,6 @@ function startNewOrder() {
   showPage("menuPage");
 }
 
-// ---------- 8. RUN WHEN PAGE LOADS ----------
 renderFilters();
 renderMenu();
 renderCart();
